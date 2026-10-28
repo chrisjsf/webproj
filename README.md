@@ -58,6 +58,10 @@ npm run dev
 
 Open <http://localhost:3000> in your browser. If you set another `PORT` in `.env`, use that port instead. The application checks MongoDB connectivity before it starts and prints an error if configuration or connection fails.
 
+## Deploy to Vercel
+
+The Express app is exported from `server.js` for Vercel's Node.js runtime. In the Vercel project settings, leave the Build Command and Output Directory empty; use `npm ci` as the Install Command if one is required. Add `MONGODB_URI` and a `SESSION_SECRET` of at least 32 characters under the project's environment variables. Use a MongoDB Atlas URI and configure Atlas network access to allow connections from your deployment.
+
 ## Try the features
 
 1. Open **Register**, create a student account, then log in with the college email or roll number.
