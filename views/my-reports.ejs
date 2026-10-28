@@ -1,0 +1,47 @@
+<%- include("partials/header", { title }) %>
+<section>
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">STUDENT ACCOUNT</p>
+      <h1>My reports</h1>
+      <p class="page-description">Review the items you have reported and their current status.</p>
+    </div>
+    <a class="button" href="/items/report">Report an item</a>
+  </div>
+  <% if (deleted) { %><p class="notice" role="status">The report was removed from public browsing.</p><% } %>
+  <% if (deleteError) { %><p class="error-message" role="alert">This report could not be removed. Only your open reports can be removed.</p><% } %>
+  <% if (items.length === 0) { %>
+    <div class="empty-state">
+      <h2>No reports yet</h2>
+      <p>Reports you submit will appear here.</p>
+      <a href="/items/report">Create your first report</a>
+    </div>
+  <% } else { %>
+    <div class="item-list">
+      <% items.forEach((item) => { %>
+        <article class="item-card">
+          <div class="item-title">
+            <h2><%= item.itemName %></h2>
+            <span class="tag <%= item.reportType %>"><%= item.reportType === "lost" ? "Lost" : "Found" %></span>
+          </div>
+          <p class="item-description"><%= item.description %></p>
+          <dl class="item-details">
+            <div><dt>Category</dt><dd><%= item.category %></dd></div>
+            <div><dt>Location</dt><dd><%= item.location %></dd></div>
+            <div><dt>Date</dt><dd><%= item.date.toISOString().slice(0, 10) %></dd></div>
+            <div><dt>Status</dt><dd><span class="status-label <%= item.status %>"><%= item.status === "deleted" ? "Removed from browsing" : item.status %></span></dd></div>
+          </dl>
+          <% if (item.status === "open") { %>
+            <form class="delete-form" action="/items/<%= item._id %>/delete" method="post">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button class="button-danger" type="submit">Remove report</button>
+            </form>
+          <% } else if (item.status !== "deleted") { %>
+            <p class="muted">This report cannot be removed because its status is <%= item.status %>.</p>
+          <% } %>
+        </article>
+      <% }); %>
+    </div>
+  <% } %>
+</section>
+<%- include("partials/footer") %>

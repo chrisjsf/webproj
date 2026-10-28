@@ -1,0 +1,20 @@
+<%- include("partials/header", { title }) %>
+<section class="form-panel narrow">
+  <h1>Student registration</h1>
+  <% if (error) { %><p class="error-message"><%= error %></p><% } %>
+  <form action="/register" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label for="name">Student name</label>
+    <input id="name" name="name" type="text" maxlength="80" required value="<%= values.name || '' %>" autocomplete="name">
+    <label for="email">College email</label>
+    <input id="email" name="email" type="email" maxlength="254" required value="<%= values.email || '' %>" autocomplete="email">
+    <label for="rollNumber">Roll number</label>
+    <input id="rollNumber" name="rollNumber" type="text" maxlength="30" required value="<%= values.rollNumber || '' %>">
+    <label for="password">Password (at least 8 characters)</label>
+    <input id="password" name="password" type="password" minlength="8" maxlength="128" required autocomplete="new-password">
+    <label for="confirmPassword">Confirm password</label>
+    <input id="confirmPassword" name="confirmPassword" type="password" minlength="8" maxlength="128" required autocomplete="new-password">
+    <button type="submit">Create account</button>
+  </form>
+</section>
+<%- include("partials/footer") %>

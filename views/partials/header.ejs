@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> | Campus Lost &amp; Found Portal</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="site-name" href="/">Campus Lost &amp; Found Portal</a>
+      <nav aria-label="Main navigation">
+        <a href="/">Home</a>
+        <a href="/items">Browse Items</a>
+        <% if (currentUser) { %>
+          <a href="/items/report">Report an Item</a>
+          <a href="/items/mine">My Reports</a>
+          <a href="/claims/mine">My Claims</a>
+          <% if (currentUser.role === "admin") { %><a href="/admin">Admin</a><% } %>
+          <form class="nav-logout" action="/logout" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="link-button" type="submit">Log out</button>
+          </form>
+          <span class="nav-user"><%= currentUser.name %></span>
+        <% } else { %>
+          <a href="/login">Login</a>
+          <a href="/register">Register</a>
+        <% } %>
+      </nav>
+    </div>
+  </header>
+  <main class="page">

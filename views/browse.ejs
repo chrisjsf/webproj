@@ -1,0 +1,49 @@
+<%- include("partials/header", { title }) %>
+<section>
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">COMMUNITY REPORTS</p>
+      <h1>Browse items</h1>
+      <p class="page-description">Search recent lost and found reports from around campus.</p>
+    </div>
+    <a class="button" href="/items/report">Report an item</a>
+  </div>
+  <% if (reported) { %><p class="notice">Your item report was saved.</p><% } %>
+  <form class="filter-form" action="/items" method="get">
+    <label for="q">Search items</label>
+    <input id="q" name="q" type="search" maxlength="100" value="<%= q %>" placeholder="Name, category, description, or location">
+    <label for="type">Report type</label>
+    <select id="type" name="type">
+      <option value="">All reports</option>
+      <option value="lost" <%= reportType === "lost" ? "selected" : "" %>>Lost</option>
+      <option value="found" <%= reportType === "found" ? "selected" : "" %>>Found</option>
+    </select>
+    <button type="submit">Search</button>
+  </form>
+
+  <% if (items.length === 0) { %>
+    <p class="empty-state">No matching reports yet.</p>
+  <% } else { %>
+    <div class="item-list">
+      <% items.forEach((item) => { %>
+        <article class="item-card">
+          <div class="item-title">
+            <h2><%= item.itemName %></h2>
+            <span class="tag <%= item.reportType %>"><%= item.reportType === "lost" ? "Lost" : "Found" %></span>
+          </div>
+          <p><strong>Category:</strong> <%= item.category %></p>
+          <p><strong>Description:</strong> <%= item.description %></p>
+          <p><strong>Location:</strong> <%= item.location %></p>
+          <p><strong>Date:</strong> <%= item.date.toISOString().slice(0, 10) %></p>
+          <p><strong>Report status:</strong> <%= item.status %></p>
+          <% if (item.imageUrl) { %><p><a href="<%= item.imageUrl %>" rel="noopener noreferrer" target="_blank">View item image</a></p><% } %>
+          <p class="muted">Reported by <%= item.reporter ? item.reporter.name : "a student" %></p>
+          <% if (item.reportType === "found" && item.status === "open") { %>
+            <% if (currentUser) { %><a href="/items/<%= item._id %>/claim">Claim Item</a><% } else { %><a href="/login">Login to claim this item</a><% } %>
+          <% } %>
+        </article>
+      <% }); %>
+    </div>
+  <% } %>
+</section>
+<%- include("partials/footer") %>

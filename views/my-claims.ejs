@@ -1,0 +1,21 @@
+<%- include("partials/header", { title }) %>
+<section>
+  <h1>My claims</h1>
+  <% if (submitted) { %><p class="notice">Your claim was submitted for administrator review.</p><% } %>
+  <% if (claims.length === 0) { %>
+    <p class="empty-state">You have not submitted any claims.</p>
+  <% } else { %>
+    <div class="item-list">
+      <% claims.forEach((claim) => { %>
+        <article class="item-card">
+          <h2><%= claim.item ? claim.item.itemName : "Item no longer available" %></h2>
+          <p><strong>Explanation:</strong> <%= claim.explanation %></p>
+          <p><strong>Claim status:</strong> <%= claim.status %></p>
+          <% if (claim.item) { %><p><strong>Item status:</strong> <%= claim.item.status %></p><% } %>
+          <p class="muted">Submitted <%= claim.createdAt.toISOString().slice(0, 10) %></p>
+        </article>
+      <% }); %>
+    </div>
+  <% } %>
+</section>
+<%- include("partials/footer") %>

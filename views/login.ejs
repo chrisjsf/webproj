@@ -1,0 +1,16 @@
+<%- include("partials/header", { title }) %>
+<section class="form-panel narrow">
+  <h1>Login</h1>
+  <% if (message) { %><p class="notice"><%= message %></p><% } %>
+  <% if (error) { %><p class="error-message"><%= error %></p><% } %>
+  <form action="/login" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label for="loginId">College email or user ID</label>
+    <input id="loginId" name="loginId" type="text" maxlength="254" required value="<%= loginId %>" autocomplete="username">
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" required autocomplete="current-password">
+    <button type="submit">Login</button>
+  </form>
+  <p>New to the portal? <a href="/register">Register here</a>.</p>
+</section>
+<%- include("partials/footer") %>

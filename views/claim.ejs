@@ -1,0 +1,19 @@
+<%- include("partials/header", { title }) %>
+<section class="form-panel">
+  <h1>Claim an item</h1>
+  <article class="item-card">
+    <h2><%= item.itemName %></h2>
+    <p><strong>Category:</strong> <%= item.category %></p>
+    <p><strong>Description:</strong> <%= item.description %></p>
+    <p><strong>Found at:</strong> <%= item.location %></p>
+    <p><strong>Date:</strong> <%= item.date.toISOString().slice(0, 10) %></p>
+  </article>
+  <% if (error) { %><p class="error-message"><%= error %></p><% } %>
+  <form action="/items/<%= item._id %>/claim" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label for="explanation">Why do you believe this item belongs to you?</label>
+    <textarea id="explanation" name="explanation" rows="5" maxlength="1000" required></textarea>
+    <button type="submit">Submit claim</button>
+  </form>
+</section>
+<%- include("partials/footer") %>

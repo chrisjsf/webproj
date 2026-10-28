@@ -1,0 +1,28 @@
+<%- include("partials/header", { title }) %>
+<section class="form-panel">
+  <h1>Report an item</h1>
+  <% if (error) { %><p class="error-message"><%= error %></p><% } %>
+  <form action="/items/report" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label for="itemName">Item name</label>
+    <input id="itemName" name="itemName" type="text" maxlength="100" required value="<%= values.itemName || '' %>">
+    <label for="category">Category</label>
+    <input id="category" name="category" type="text" maxlength="50" required placeholder="For example, books or electronics" value="<%= values.category || '' %>">
+    <label for="reportType">Report type</label>
+    <select id="reportType" name="reportType" required>
+      <option value="">Choose one</option>
+      <option value="lost" <%= values.reportType === "lost" ? "selected" : "" %>>Lost</option>
+      <option value="found" <%= values.reportType === "found" ? "selected" : "" %>>Found</option>
+    </select>
+    <label for="location">Location</label>
+    <input id="location" name="location" type="text" maxlength="120" required value="<%= values.location || '' %>">
+    <label for="date">Date lost or found</label>
+    <input id="date" name="date" type="date" required value="<%= values.date || '' %>">
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="5" maxlength="1000" required><%= values.description || '' %></textarea>
+    <label for="imageUrl">Image URL (optional)</label>
+    <input id="imageUrl" name="imageUrl" type="url" maxlength="500" value="<%= values.imageUrl || '' %>">
+    <button type="submit">Save report</button>
+  </form>
+</section>
+<%- include("partials/footer") %>

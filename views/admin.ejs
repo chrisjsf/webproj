@@ -1,0 +1,69 @@
+<%- include("partials/header", { title }) %>
+<section>
+  <h1>Administrator</h1>
+  <p>Review claims carefully. Approving a claim marks the found item as claimed; mark it returned only after handover.</p>
+  <% if (message) { %><p class="notice"><%= message %></p><% } %>
+  <% if (error) { %><p class="error-message"><%= error %></p><% } %>
+
+  <h2>Claims</h2>
+  <% if (claims.length === 0) { %><p class="empty-state">No claims have been submitted.</p><% } %>
+  <div class="item-list">
+    <% claims.forEach((claim) => { %>
+      <article class="item-card">
+        <h3><%= claim.item ? claim.item.itemName : "Item unavailable" %></h3>
+        <p><strong>Student:</strong> <%= claim.student ? claim.student.name : "Student unavailable" %>
+          <% if (claim.student) { %>(<%= claim.student.email %>, <%= claim.student.rollNumber %>)<% } %>
+        </p>
+        <p><strong>Explanation:</strong> <%= claim.explanation %></p>
+        <p><strong>Claim status:</strong> <%= claim.status %></p>
+        <% if (claim.status === "pending" && claim.item) { %>
+          <div class="actions">
+            <% if (claim.item.status === "open") { %>
+              <form action="/admin/claims/<%= claim._id %>" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="decision" value="approve">
+                <button type="submit">Approve claim</button>
+              </form>
+            <% } %>
+            <form action="/admin/claims/<%= claim._id %>" method="post">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <input type="hidden" name="decision" value="reject">
+              <button class="button-danger" type="submit">Reject claim</button>
+            </form>
+          </div>
+        <% } %>
+      </article>
+    <% }); %>
+  </div>
+
+  <h2>Found items awaiting handover</h2>
+  <% const returnableItems = items.filter((item) => item.reportType === "found" && item.status === "claimed"); %>
+  <% if (returnableItems.length === 0) { %><p class="empty-state">No found items are awaiting handover.</p><% } %>
+  <div class="item-list">
+    <% returnableItems.forEach((item) => { %>
+      <article class="item-card">
+        <h3><%= item.itemName %></h3>
+        <p><strong>Location:</strong> <%= item.location %></p>
+        <p><strong>Reported by:</strong> <%= item.reporter ? item.reporter.name : "a student" %></p>
+        <form action="/admin/items/<%= item._id %>/return" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button type="submit">Mark as returned</button>
+        </form>
+      </article>
+    <% }); %>
+  </div>
+
+  <h2>Recent item reports</h2>
+  <% if (items.length === 0) { %><p class="empty-state">No item reports have been submitted.</p><% } %>
+  <div class="item-list">
+    <% items.forEach((item) => { %>
+      <article class="item-card">
+        <h3><%= item.itemName %> (<%= item.reportType %>)</h3>
+        <p><strong>Reporter:</strong> <%= item.reporter ? item.reporter.name : "a student" %></p>
+        <p><strong>Location:</strong> <%= item.location %></p>
+        <p><strong>Status:</strong> <%= item.status %></p>
+      </article>
+    <% }); %>
+  </div>
+</section>
+<%- include("partials/footer") %>
