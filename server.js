@@ -21,6 +21,12 @@ let sessionMiddleware;
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.use((req, res, next) => {
+  res.locals.currentUser = null;
+  res.locals.csrfToken = "";
+  next();
+});
+
 async function getSessionMiddleware() {
   if (
     !process.env.MONGODB_URI ||
